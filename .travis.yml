@@ -1,1 +1,3 @@
-languaje: r
+language: r
+r: bioc-release
+

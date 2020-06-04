@@ -13,4 +13,11 @@ Suggests:
     testthat
 Imports: 
     GSVA,
-    stats
+    stats,
+    grDevices,
+    Matrix,
+    class,
+    rpart,
+    survival,
+    nnet,
+    bestNormalize

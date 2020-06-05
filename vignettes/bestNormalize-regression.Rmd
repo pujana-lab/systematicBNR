@@ -1,0 +1,51 @@
+---
+title: "bestNormalize-regression"
+author: "Luis Palomero"
+date: "`Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{bestNormalize-regression}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(inmuneAssociation)
+```
+
+# Data preprocessing
+
+Prior to running regression we must preprocess the data using preprocess_phenotypes and preprocess_effect_variable methods.
+
+```{r load_and_preprocess_data}
+set.seed(12345)
+random_dataset = data.frame(
+  sample = sprintf('sample_%s', 1:100),
+  signature = rnorm(100, 12, 3),
+  age = floor(runif(100, 45, 70)),
+  gender = sample(c('male', 'female'), 100, replace = TRUE),
+  constant = rep('x', 100)
+)
+
+random_dataset$signature_derived = random_dataset$signature * 100 + rnorm(100, 2, 3)
+
+summary(random_dataset)
+
+# inmuneAssociation::preprocess_effect_variable()
+# inmuneAssociation::preprocess_phenotypes()
+
+y = inmuneAssociation::preprocess_effect_variable(random_dataset$signature)
+phenotypes = inmuneAssociation::preprocess_phenotypes(
+  random_dataset,
+  'sample',
+  c('age', 'gender', 'constant', 'signature_derived')
+)
+
+``` 

@@ -6,6 +6,8 @@
 #' @param ... Extra parameters for bestNormalize function
 #'
 #' @return out Array with clean data
+#'
+#' @export
 preprocess_effect_variable <- function(values, remove_outliers = FALSE, ...){
   normalized_data  = bestNormalize::bestNormalize(values, ...)
   out = normalized_data$x.t

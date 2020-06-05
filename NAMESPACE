@@ -2,3 +2,5 @@
 
 export(preprocess_effect_variable)
 export(preprocess_phenotypes)
+export(stepwise_fit_model)
+export(systematic_regression)

@@ -12,7 +12,7 @@
 #' @export
 preprocess_phenotypes <- function(phenotypes, samples_colname, phenotypes_to_include){
   samples = phenotypes[,samples_colname]
-  pheno_clean = phenotypes[,phenotypes_to_include]
+  pheno_clean = phenotypes[,unique(phenotypes_to_include)]
   rownames(pheno_clean) = samples
 
   pheno_clean = pheno_clean[stats::complete.cases(pheno_clean),]

@@ -12,7 +12,7 @@ preprocess_effect_variable <- function(values, remove_outliers = FALSE, ...){
   normalized_data  = bestNormalize::bestNormalize(values, ...)
   out = normalized_data$x.t
   attr(out, 'bestNormalize') = normalized_data
-
+  attr(out, 'chosenTransformation') = attr(normalized_data$chosen_transform, 'class')[1]
   if(remove_outliers){
     out = remove_outliers(out)
   }

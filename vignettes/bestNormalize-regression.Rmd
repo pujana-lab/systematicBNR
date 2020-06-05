@@ -17,35 +17,168 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
+
 library(inmuneAssociation)
+
 ```
 
-# Data preprocessing
+# Detailed  Linear regression with best-normalize and stepAIC methods to preprocess and select covariables
+
+## Data preprocessing and normalizing
 
 Prior to running regression we must preprocess the data using preprocess_phenotypes and preprocess_effect_variable methods.
 
 ```{r load_and_preprocess_data}
+
 set.seed(12345)
+n = 500
+
 random_dataset = data.frame(
-  sample = sprintf('sample_%s', 1:100),
-  signature = rnorm(100, 12, 3),
-  age = floor(runif(100, 45, 70)),
-  gender = sample(c('male', 'female'), 100, replace = TRUE),
-  constant = rep('x', 100)
+  sample = sprintf('sample_%s', 1:n),
+  signature = (rnorm(n, 10, 3))^2,
+  age = floor(runif(n, 45, 70)),
+  gender = sample(c('male', 'female'), n, replace = TRUE),
+  constant = rep('x', n)
 )
 
-random_dataset$signature_derived = random_dataset$signature * 100 + rnorm(100, 2, 3)
+random_dataset$signature_derived = log(random_dataset$signature) +  (rnorm(n,0, .25))
 
 summary(random_dataset)
 
-# inmuneAssociation::preprocess_effect_variable()
-# inmuneAssociation::preprocess_phenotypes()
+y = inmuneAssociation::preprocess_effect_variable(random_dataset$signature, allow_orderNorm = FALSE)
+plot(
+  random_dataset$signature_derived,
+  random_dataset$signature
+)
 
-y = inmuneAssociation::preprocess_effect_variable(random_dataset$signature)
 phenotypes = inmuneAssociation::preprocess_phenotypes(
   random_dataset,
   'sample',
   c('age', 'gender', 'constant', 'signature_derived')
 )
+
+(method = attr(y, 'chosenTransformation'))
+
+# par(mfrow  = c(2,1))
+plot(density(random_dataset$signature), main = 'Original data')
+plot(density(y), main = 'Transformed data')
+# par(mfrow  = c(1,1))
+
+``` 
+
+Signature value has been normalized using [`r method`]. Transformed data distribucion shape is more "normal" as original one.
+
+
+## Model fitting
+
+Next step in the pipeline is perform the model fitting using Akaike Incormation Criterion to remove non-informative covariates sistematically.
+
+```{r model_fitting}
+
+original_model = stats::lm(random_dataset$signature ~ ., data = phenotypes)
+
+models = inmuneAssociation::stepwise_fit_model(y, phenotypes, scope = list(
+  lower = ~ 1,
+  upper = ~ .
+))
+
+summary(original_model)
+summary(models$base)
+summary(models$fit_stepwise)
+
+```
+
+
+## Draw model prediction
+
+```{r draw_prediction}
+
+
+ plot_model <- function(raw_y, phenotypes, predictions, title){
+
+   plot(
+     phenotypes$signature_derived,
+     raw_y,
+     main = title,
+     xlab = 'Fake correlated data',
+     ylab = 'Random data'
+   )
+   
+   for(i  in 1:length(predictions)){
+
+     aux_df = data.frame(
+       x = phenotypes$signature_derived,
+       y = predictions[[i]]
+     )
+     aux_df2 = aux_df[order(aux_df$x),  ]
+
+     lines(
+        aux_df2$x,
+        aux_df2$y,
+        col = i+1
+     )
+   }
+   legend(
+      'topleft',
+      c('bestNorm/AIC', 'untransformed'),
+      pch = 3,
+      col = c(2,3),
+      cex = 0.8
+   )
+
+ }  
+ 
+raw_y = random_dataset$signature
+ 
+predictions = list(
+  akaike = attr(models$fit_stepwise, 'untransformed_prediction'),
+  raw  = as.numeric(predict(original_model, type = 'response'))
+)
+
+plot_model(random_dataset$signature, phenotypes, predictions, 'Comparing base/transformed lm') 
+
+
+```
+
+# Detailed  Linear regression with best-normalize and stepAIC methods to preprocess and select covariables
+
+Method *systematic_regression* allows run this pipeline sistematically to find candidate covariables.
+Below example checks 3 signatures against 'prs' covariable, using 'age-gender-stage-constant' as other phenotype values, generating a list of results combined into a table.
+
+```{r detailed_linerar_regressions}
+
+set.seed(12345)
+n = 600
+
+random_dataset = data.frame(
+  sample = sprintf('sample_%s', 1:n),
+  prs = (rnorm(n, 10, 3))^2,
+  age = floor(runif(n, 45, 70)),
+  gender = sample(c('male', 'female'), n, replace = TRUE),
+  constant = rep('x', n)
+)
+random_dataset = random_dataset[order(random_dataset$prs),]
+random_dataset$stage = c(rep('stage_1', n/3 ), rep('stage_2', n/3 ), rep('stage_3', n/3 ))
+
+signatures = data.frame(
+  candidate_a = rnorm(n, 0, 3),
+  candidate_b = random_dataset$prs * 2 + rnorm(n, 0, 1),
+  candidate_c = runif(n, 10, 20)
+)
+
+phenotypes = cbind(random_dataset, signatures)
+
+covariables = c('age', 'gender', 'constant', 'stage')
+signature_name = colnames(signatures)[1]
+
+results = lapply(colnames(signatures), function(signature_name, phenotypes){
+  systematic_regression(
+    phenotypes, 'prs', signature_name, 'sample', covariables
+  )  
+}, phenotypes)
+
+results = do.call('rbind', results)
+
+print(results)
 
 ``` 

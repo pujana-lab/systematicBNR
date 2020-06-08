@@ -1,10 +1,15 @@
-Package: inmuneAssociation
+Package: systematicBNR
 Type: Package
-Title: Immune Cell Associations with Cancer Risk tools
+Title: Set of tools defined to run systematically linear regressions with output variable normalized using bestNormalize functions
 Version: 0.1.0
 Author: Luis Palomero
 Maintainer: Luis Palomero <lpalomerol@gmail.com>
-Description: Code developed to perform pipelines included in this paper.
+Description: This package has been developed to allow running systematically linear regression for a group of varaibles easily. These regressions can be adjusted by a group of predefined covaraibles.
+  Before running  each regression three big steps are applied: 
+    - First of all we have removed users with empty data values and covariables without variability.
+    - Then we have applied bestNormalize regression pipeline to output variable
+    - Thirt step implies the application of Stepwise AIC pipeline to eliminate covariables potentially non informative.
+  The main function output (systematic_regression) returns the results as 1-row data.frame object, ideally defined to run inside a loop.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

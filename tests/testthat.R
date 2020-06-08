@@ -1,4 +1,4 @@
 library(testthat)
-library(inmuneAssociation)
+library(systematicBNR)
 
-test_check("inmuneAssociation")
+test_check("systematicBNR")

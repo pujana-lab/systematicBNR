@@ -19,7 +19,7 @@ systematic_regression <- function(dataset,  effect_variable, main_covariable, sa
   y_norm = preprocess_effect_variable(pheno_clean[,effect_variable], allow_orderNorm = FALSE)
   pheno_clean = pheno_clean[,colnames(pheno_clean) != effect_variable]
 
-  models = inmuneAssociation::stepwise_fit_model(y_norm, pheno_clean, scope = list(
+  models = stepwise_fit_model(y_norm, pheno_clean, scope = list(
     lower = stats::as.formula(sprintf('~ %s', main_covariable)),
     upper = ~ .
   ), trace = 0)

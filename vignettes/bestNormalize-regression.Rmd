@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 
-library(inmuneAssociation)
+library(systematicBNR)
 
 ```
 
@@ -45,13 +45,13 @@ random_dataset$signature_derived = log(random_dataset$signature) +  (rnorm(n,0, 
 
 summary(random_dataset)
 
-y = inmuneAssociation::preprocess_effect_variable(random_dataset$signature, allow_orderNorm = FALSE)
+y = systematicBNR::preprocess_effect_variable(random_dataset$signature, allow_orderNorm = FALSE)
 plot(
   random_dataset$signature_derived,
   random_dataset$signature
 )
 
-phenotypes = inmuneAssociation::preprocess_phenotypes(
+phenotypes = systematicBNR::preprocess_phenotypes(
   random_dataset,
   'sample',
   c('age', 'gender', 'constant', 'signature_derived')
@@ -77,7 +77,7 @@ Next step in the pipeline is perform the model fitting using Akaike Incormation 
 
 original_model = stats::lm(random_dataset$signature ~ ., data = phenotypes)
 
-models = inmuneAssociation::stepwise_fit_model(y, phenotypes, scope = list(
+models = systematicBNR::stepwise_fit_model(y, phenotypes, scope = list(
   lower = ~ 1,
   upper = ~ .
 ))

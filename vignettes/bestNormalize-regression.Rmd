@@ -66,12 +66,12 @@ plot(density(y), main = 'Transformed data')
 
 ``` 
 
-Signature value has been normalized using [`r method`]. Transformed data distribucion shape is more "normal" as original one.
+Signature value has been normalized using [`r method`] transformation. Now the transformed data distribution shape is more "normal" as the original one.
 
 
 ## Model fitting
 
-Next step in the pipeline is perform the model fitting using Akaike Incormation Criterion to remove non-informative covariates sistematically.
+The next step in the pipeline is to perform the model fitting using Akaike Information Criterion to remove non-informative covariates systematically.
 
 ```{r model_fitting}
 
@@ -90,6 +90,8 @@ summary(models$fit_stepwise)
 
 
 ## Draw model prediction
+
+Now we draw the model prediction of the best normalized and untransformed data to compare them.
 
 ```{r draw_prediction}
 

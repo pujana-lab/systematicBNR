@@ -1,3 +1,13 @@
+#' extract_model_coefficients
+#' 
+#' This function extracts the coefficients of the main covariable and returns them along the p value of the model into a data frame
+#' 
+#' @param model Model  Fitted model
+#' @param main_covariable String  The main covariable label, this is the studied one, other covaraibles can be considered or not at the regression
+#' 
+#' @return DataFrame  The coefficients of the main covariable with the p value and adjusted R squared of the fitted model 
+#' 
+#' @export 
 
 extract_model_coefficients <- function(model, main_covariable){
 

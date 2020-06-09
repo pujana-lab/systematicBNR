@@ -1,3 +1,12 @@
+#' Detects which values lies beyond the extremes of the whiskers of a box plot and marks them
+#' 
+#' @param values Array  A numeric array to mark outliers
+#' 
+#' @return A numeric array with outliers value as NA
+#' 
+#' @export
+
+
 remove_outliers <- function(values){
 
   outlierVals = grDevices::boxplot.stats(as.numeric(values))$out

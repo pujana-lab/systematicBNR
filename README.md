@@ -18,11 +18,5 @@ install_github("pujana-lab/systematicBNR",ref="master")
 
 ## Pipeline
 
-  Before running each regression three big steps are applied: 
-    - First of all we have removed users with empty data values and covariables without variability.
-    - Then we have applied *bestNormalize* regression pipeline to output variable
-    - Third step implies the application of *Stepwise AIC* pipeline to eliminate covariables potentially non informative.
-  The main function output (systematic_regression) returns the results as 1-row data.frame object, ideally defined to run inside a loop.
-  
-  
+Before running the regression analysis, three steps should be completed: 1) delete cases with empty data and covariables without variability; 2) apply *bestNormalize* regression to output variable; 3) apply *Stepwise AIC* pipeline to delete covariables non-informative. The main function output (systematic_regression) returns the results as 1-row data.frame object, ideally defined to run in a loop.
  

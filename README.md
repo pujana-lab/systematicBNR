@@ -8,7 +8,7 @@ This package contains the pipeline and tools developed for the study:
 
 This pipeline was developed and is maintained by Luis Palomero and Roderic Espín (MA Pujana's lab, Catalan Institute of Oncology, IDIBELL).
 
-> **Note:** the published paper's Methods section cites [systematicQTL](https://github.com/pujana-lab/systematicQTL) as the code repository for the QTL analysis pipeline. `systematicBNR` provides [add: what BNR covers specifically — e.g., the regression/normalization component] used alongside it. See `systematicQTL` for the complementary pipeline.
+> **Note:** This package provides the regression/normalization pre-processing step (Best Normalize Regression) used prior to QTL mapping. The published paper's Methods section cites [systematicQTL](https://github.com/pujana-lab/systematicQTL) for the QTL mapping step itself (LOD scoring, peak identification). Together, `systematicBNR` (pre-processing) and `systematicQTL` (QTL mapping) form the full analysis pipeline for this study.
 
 ## Dependencies
 
